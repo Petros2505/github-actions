@@ -13,14 +13,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Read the current version from version.txt
       - name: Read version from version.txt
         id: read_version
         run: |
-          VERSION=$(cat version.txt || echo "v0")
+          if [ -f version.txt ]; then
+            VERSION=$(cat version.txt)
+          else
+            VERSION="v0" # Default version if file does not exist
+          fi
           echo "Current version: $VERSION"
           echo "::set-output name=version::$VERSION"
+      - name: login to Docker Hub
+        run: echo "${{ vars.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      # Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t peto2505/website:${{ steps.read_version.outputs.version }} .
 
+      # Push Docker image to Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push peto2505/website:${{ steps.read_version.outputs.version }}
+
+      # Increment version only if the build and push steps succeed
       - name: Increment version
+        if: success()  # This ensures version is incremented only if the previous steps were successful
         id: increment_version
         run: |
           VERSION=$(echo ${{ steps.read_version.outputs.version }} | sed 's/v//')
@@ -30,15 +48,9 @@ jobs:
           echo $NEW_VERSION > version.txt
           echo "::set-output name=new_version::$NEW_VERSION"
 
-      - name: Build Docker image
-        run: |
-          docker build -t peto2505/website:${{ steps.increment_version.outputs.new_version }} .
-
-      - name: Push Docker image to Docker Hub
-        run: |
-          docker push peto2505/website:${{ steps.increment_version.outputs.new_version }}
-
+      # Commit and push the updated version.txt file
       - name: Commit and push version update
+        if: success()  # Only commits if version incremented successfully
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
