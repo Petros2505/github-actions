@@ -3,7 +3,25 @@ on:
   push:
     branches: [ "main" ]
 jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check-message.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check commit message
+        id: check-message
+        run: |
+          MSG=$(git log -1 --pretty=%B)
+          if [ "$MSG" = "zzz" ]; then
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          fi
+
   setup-build-publish-deploy:
+    needs: check-commit
+    if: needs.check-commit.outputs.should_run == 'true'
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     permissions:
@@ -12,10 +30,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
     - name: Login to Docker Hub
       run: echo "${{ vars.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
     - name: Build image
       run: |
         VERSION=$(cat version.txt)
@@ -23,12 +39,10 @@ jobs:
         docker build -t peto2505/website:v${NEW_VERSION} .
         docker images
         docker push peto2505/website:v${NEW_VERSION}
-
     - name: Set up GitHub CLI
       run: |
         # Install GitHub CLI
         sudo apt-get install gh
-
     - name: Authenticate with GitHub CLI
       run: |
         gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
@@ -37,8 +51,8 @@ jobs:
       run: |
         git config --global user.name "Petros2505"
         git config --global user.email "pethov25@gmail.com"
-
     - name: Update version and commit
+      if: success()
       run: |
         VERSION=$(cat version.txt)
         NEW_VERSION=$((VERSION + 1))
@@ -46,7 +60,3 @@ jobs:
         git add version.txt
         git commit -m "Update version to v${NEW_VERSION}"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Petros2505/github-actions.git HEAD:main
-
-
-
-
