@@ -32,11 +32,11 @@ jobs:
     - name: Authenticate with GitHub CLI
       run: |
         gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
-
+        gh auth status
     - name: Set up Git
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
+        git config --global user.name "Petros2505"
+        git config --global user.email "pethov25@gmail.com"
 
     - name: Update version and commit
       run: |
