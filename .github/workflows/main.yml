@@ -52,8 +52,8 @@ jobs:
       - name: Commit and push version update
         if: success()  # Only commits if version incremented successfully
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Petros2505"
+          git config --global user.email "pethov25@gmail.com"
           git add version.txt
           git commit -m "Increment version to ${{ steps.increment_version.outputs.new_version }}"
           git push
