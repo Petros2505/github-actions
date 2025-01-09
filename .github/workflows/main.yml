@@ -13,10 +13,10 @@ jobs:
         id: check-message
         run: |
           MSG=$(git log -1 --pretty=%B)
-          if [ "$MSG" = "zzz" ]; then
-            echo "should_run=false" >> $GITHUB_OUTPUT
-          else
+          if [ "$MSG" == "zzz" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
           fi
 
   setup-build-publish-deploy:
