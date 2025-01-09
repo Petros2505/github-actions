@@ -7,7 +7,7 @@ jobs:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
+      contents: 'write'
       id-token: 'write'
     steps:
     - name: Checkout
@@ -45,6 +45,4 @@ jobs:
         echo $NEW_VERSION > version.txt
         git add version.txt
         git commit -m "Update version to v${NEW_VERSION}"
-        
-        
-        git push
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Petros2505/github-actions.git HEAD:main
