@@ -1,0 +1,12 @@
+{
+  "name": "github-actions",
+  "version": "1.0.0-development",
+  "scripts": {
+    "semantic-release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.7",
+    "semantic-release": "^21.0.1"
+  }
+}
