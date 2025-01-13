@@ -46,5 +46,5 @@ jobs:
           docker build -t peto2505/website:${{ env.VERSION }} .
           docker push peto2505/website:${{ env.VERSION }}
           # Also push as latest
-          docker tag peto2505/website:${{ env.VERSION }} peto2505/website:latest
+          docker tag peto2505/website:${{ env.VERSION }}
           docker push peto2505/website:latest
