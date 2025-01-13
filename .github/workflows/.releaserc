@@ -1,11 +1,11 @@
+{
   "branches": ["main"],
   "plugins": [
     ["@semantic-release/commit-analyzer", {
       "releaseRules": [
-        {"message": "*feat: zzz*", "release": false},
-        {"type": "feat", "release": "minor"},
-        {"type": "fix", "release": "patch"},
-        {"type": "BREAKING", "release": "major"}
+        {"message": "*xxx*", "release": "patch"},
+        {"message": "feat: xxx*", "release": "minor"},
+        {"message": "*", "release": false}
       ],
       "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]
