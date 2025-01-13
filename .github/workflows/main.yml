@@ -35,13 +35,16 @@ jobs:
 
       - name: Get new version
         id: get-version
+        if: steps.release.outcome == 'success'
         run: |
           echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
+        if: steps.release.outcome == 'success'
         run: echo "${{ vars.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and push Docker image
+        if: steps.release.outcome == 'success'
         run: |
           docker build -t peto2505/website:${{ env.VERSION }} .
           docker push peto2505/website:${{ env.VERSION }}
