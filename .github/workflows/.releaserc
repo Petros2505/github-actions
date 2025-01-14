@@ -6,13 +6,11 @@
         {"message": "*xxx*", "release": "patch"},
         {"message": "feat: xxx*", "release": "minor"},
         {"message": "*", "release": false}
-      ],
-      "parserOpts": {
-        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]
-      }
+      ]
     }],
     "@semantic-release/release-notes-generator",
     "@semantic-release/npm",
     "@semantic-release/github"
   ]
 }
+
