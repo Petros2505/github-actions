@@ -3,9 +3,9 @@
   "plugins": [
     ["@semantic-release/commit-analyzer", {
       "releaseRules": [
-        {"message": "xxx", "release": "patch"},
-        {"message": "feat: xxx*", "release": "minor"},
-        {"message": "*", "release": false}
+        { "message": "yyy", "release": "patch" },
+        { "message": "feat: xxx*", "release": "minor" },
+        { "message": "*", "release": false }
       ]
     }],
     "@semantic-release/release-notes-generator",
